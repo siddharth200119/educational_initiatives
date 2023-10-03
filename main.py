@@ -1,21 +1,30 @@
 import ToDoList
+import ToDoListItem
 
-def add_task(ToDo_List, caretaker, task):
+def if_exists(ToDo_List, title):
+    for task in get_tasks(ToDo_List=ToDo_List):
+        if task.title == title:
+            return (True, task)
+    return (False, )
+
+def add_task(ToDo_List, caretaker, director, task_title, due_date = None, tags = None, completed = False):
     #adding task to list
-    ToDo_List.add_task(task)
+    if(not if_exists(ToDo_List=ToDo_List, title=task_title)[0]):
+        task = director.construct(task_title, due_date, tags, completed)
+        ToDo_List.add_task(task)
+        #adding the memento in caretaker
+        caretaker.add_memento(ToDo_List.create_memento())
+    else:
+        print("the title is duplicate please rename it")
 
-    #adding the memento in caretaker
-    caretaker.add_memento(ToDo_List.create_memento())
-
-def remove_task(ToDo_List, caretaker, task):
-    #adding task to list
-    ToDo_List.remove_task(task)
-
-    #creating memento for that action
-    memento = ToDo_List.create_memento()
-
-    #adding the memento in caretaker
-    caretaker.add_memento(memento)
+def remove_task(ToDo_List, caretaker, task_title):
+    check = if_exists(ToDo_List=ToDo_List, title=task_title)
+    if(check[0]):
+        ToDo_List.remove_task(check[1])
+        #adding the memento in caretaker
+        caretaker.add_memento(ToDo_List.create_memento())
+    else:
+        print("item not found")
 
 def get_tasks(ToDo_List):
     return ToDo_List.get_tasks()
@@ -49,29 +58,23 @@ if __name__ == "__main__":
     ToDo_List = ToDoList.ToDoList()
     caretaker = ToDoList.ToDoListCaretaker()
 
+    todo_item_builder = ToDoListItem.ToDoItemBuilder()
+    director = ToDoListItem.ToDoListItemDirector(todo_item_builder)
     #test code to check if function work
 
     print("adding task 'task 1'")
-    add_task(ToDo_List=ToDo_List, caretaker=caretaker, task="task 1")
+    add_task(ToDo_List=ToDo_List, caretaker=caretaker, director=director, task_title="task 1")
     print("current to do list:")
-    print(get_tasks(ToDo_List=ToDo_List))
+    print(get_tasks(ToDo_List=ToDo_List)[0].title)
 
     print("adding task 'task 2'")
-    add_task(ToDo_List=ToDo_List, caretaker=caretaker, task="task 2")
+    add_task(ToDo_List=ToDo_List, caretaker=caretaker, director=director, task_title="task 2")
     print("current to do list:")
-    print(get_tasks(ToDo_List=ToDo_List))
+    print(get_tasks(ToDo_List=ToDo_List)[0].title)
+    print(get_tasks(ToDo_List=ToDo_List)[1].title)
 
-    print("adding task 'task 3'")
-    add_task(ToDo_List=ToDo_List, caretaker=caretaker, task="task 3")
+    print("removing task 'task 3'")
+    remove_task(ToDo_List=ToDo_List, caretaker=caretaker, task_title="task 3")
     print("current to do list:")
-    print(get_tasks(ToDo_List=ToDo_List))
-
-    print("undo action: ")
-    undo(ToDo_List=ToDo_List, caretaker=caretaker)
-    print("current to do list:")
-    print(get_tasks(ToDo_List=ToDo_List))
-
-    print("redo action: ")
-    redo(ToDo_List=ToDo_List, caretaker=caretaker)
-    print("current to do list:")
-    print(get_tasks(ToDo_List=ToDo_List))
+    print(get_tasks(ToDo_List=ToDo_List)[0].title)
+    print(get_tasks(ToDo_List=ToDo_List)[1].title)
