@@ -40,7 +40,7 @@ class ToDoItemBuilder(ItemBuilder):
         self.item.completed = completed
 
     def build(self):
-        return copy.copy(self.item)
+        return copy.deepcopy(self.item)
     
 class ToDoListItemDirector:
     def __init__(self, builder):

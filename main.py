@@ -42,9 +42,11 @@ def undo(ToDo_List, caretaker):
     if(caretaker.get_current_memento() != None):
         #get the current state after undo moved the index to previous location
         ToDo_List.restore_memento(caretaker.get_current_memento())
+        return True
     else:
         #print is nothing was there to undo
         print("Nothing to undo")
+        return False
 
 def redo(ToDo_List, caretaker):
     #redo in caretaker to move the index to next location
@@ -54,9 +56,26 @@ def redo(ToDo_List, caretaker):
     if(caretaker.get_current_memento() != None):
         #get the current state after redo moved the index to next location
         ToDo_List.restore_memento(caretaker.get_current_memento())
+        return True
     else:
         #print is nothing was there to redo
         print("Nothing to redo")
+        return False
+
+def mark_completed(ToDo_List, caretaker, task_title):
+    check = if_exists(ToDo_List=ToDo_List, title=task_title)
+    if(check[0]):
+        if(check[1].completed == False):
+            check[1].completed = True
+            #adding the memento in caretaker
+            caretaker.add_memento(ToDo_List.create_memento())
+            return True
+        else:
+            print("Item already marked as completed")
+            return False
+    else:
+        print("item not found")
+        return False
 
 if __name__ == "__main__":
 
@@ -66,4 +85,4 @@ if __name__ == "__main__":
     todo_item_builder = ToDoListItem.ToDoItemBuilder()
     director = ToDoListItem.ToDoListItemDirector(todo_item_builder)
     
-    menu(add_task=add_task, get_tasks=get_tasks, remove_task=remove_task, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+    menu(add_task=add_task, get_tasks=get_tasks, remove_task=remove_task, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
