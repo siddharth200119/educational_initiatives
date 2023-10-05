@@ -4,7 +4,7 @@ import time
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def add_task_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def add_task_menu(add_task, ToDo_List, caretaker, director):
     clear_screen()
     print("ADDING TASK")
     title = input("Enter task title: ")
@@ -18,18 +18,16 @@ def add_task_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, 
     if(add_task(ToDo_List, caretaker, director, title, due_date, tags)):
         print("task added successfully")
     time.sleep(2)
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
 
-def remove_task_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def remove_task_menu(remove_task, ToDo_List, caretaker):
     clear_screen()
     print("REMOVING TASK")
     title = input("Enter title of task to be removed: ")
     if(remove_task(ToDo_List, caretaker, title)):
         print("task removed successfully")
     time.sleep(2)
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
     
-def display_items(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def display_items(get_tasks, ToDo_List):
     clear_screen()
     tasks = get_tasks(ToDo_List)
     print("DISPLAYING TASKS")
@@ -53,28 +51,24 @@ def display_items(add_task, remove_task, get_tasks, undo, redo, mark_completed, 
 
     print()
     input("press enter to go back to menu")
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
 
-def undo_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def undo_menu(undo, ToDo_List, caretaker):
     if(undo(ToDo_List, caretaker)):
         undo(ToDo_List, caretaker)
         print("Undo Successful")
     time.sleep(2)
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
 
-def redo_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def redo_menu(redo, ToDo_List, caretaker):
     if(redo(ToDo_List, caretaker)):
         redo(ToDo_List, caretaker)
         print("Redo Successful")
     time.sleep(2)
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
 
-def mark_completed_menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
+def mark_completed_menu(mark_completed, ToDo_List, caretaker):
     task_title = input("Enter Task Title: ")
     if(mark_completed(ToDo_List, caretaker, task_title)):
         print("Task marked as completed")
     time.sleep(2)
-    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
 
 def menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director):
 
@@ -91,14 +85,19 @@ def menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List
 
     match choice:
         case "1":
-            add_task_menu(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            add_task_menu(add_task=add_task, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
         case "2":
-            remove_task_menu(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            remove_task_menu(remove_task=remove_task, ToDo_List=ToDo_List, caretaker=caretaker)
         case "3":
-            display_items(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            display_items(get_tasks=get_tasks, ToDo_List=ToDo_List)
         case "4":
-            undo_menu(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            undo_menu(undo=undo, ToDo_List=ToDo_List, caretaker=caretaker)
         case "5":
-            redo_menu(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            redo_menu(redo=redo, ToDo_List=ToDo_List, caretaker=caretaker)
         case "6":
-            mark_completed_menu(add_task=add_task, remove_task=remove_task, get_tasks=get_tasks, undo=undo, redo=redo, mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker, director=director)
+            mark_completed_menu(mark_completed=mark_completed, ToDo_List=ToDo_List, caretaker=caretaker)
+        case _:
+            print("Please Enter a valid value.")
+            time.sleep(2)
+
+    menu(add_task, remove_task, get_tasks, undo, redo, mark_completed, ToDo_List, caretaker, director)
